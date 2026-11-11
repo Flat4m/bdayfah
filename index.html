@@ -176,20 +176,7 @@
   </div>
 </div>
 
-<!-- Tag Audio -->
-<audio id="birthdayAudio" src="lagu-ultah.mp3"></audio>
-
-<!-- Tombol Click Here -->
-<button onclick="playMusic()">Click Here</button>
-
-<script>
-  function playMusic() {
-    const audio = document.getElementById("birthdayAudio");
-    audio.play().catch(err => {
-      console.log("Error play audio:", err);
-    });
-  }
-</script>
+<audio id="birthdayAudio" src="song.mp3" preload="auto" style="display:none"></audio>
 
 <script>
   // ---------- Bentuk melayang ----------
