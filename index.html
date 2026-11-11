@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Birthday Song</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: "Quicksand", system-ui, sans-serif;
+    font-size: 24px; /* basis ukuran em untuk .pleaseClick */
+    color: #fff;
+    background: radial-gradient(circle at 50% 50%, #2c3b58 0%, #1c2845 35%, #0e1527 70%, #070b14 100%);
+  }
+
+  /* ---------- Bentuk geometris di background ---------- */
+  .shapes {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .shape {
+    position: absolute;
+    animation: drift var(--dur) ease-in-out infinite alternate;
+    animation-delay: var(--delay);
+  }
+
+  .shape svg { display: block; overflow: visible; }
+
+  @keyframes drift {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+  }
+
+  /* ---------- Container utama (sesuai video) ---------- */
+  .pleaseClick {
+    position: absolute;
+    background: hsla(210, 50%, 15%, 0.75);
+    font-size: 80%;
+    width: 10em;
+    text-align: center;
+    left: calc(50vw - 5em);
+    top: calc(50vh - 12.5em);
+    animation: jump 1s ease-in-out infinite alternate;
+    cursor: pointer;
+    color: white;
+    padding: 0.7em 0 1.4em;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 2;
+    user-select: none;
+    outline: none;
+  }
+
+  @keyframes jump {
+    from { transform: translateY(0); }
+    to   { transform: translateY(0.7em); }
+  }
+
+  .pleaseClick .hint {
+    margin: 0;
+    font-size: 0.75em;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+    opacity: 0.92;
+  }
+
+  .pleaseClick .hint svg {
+    display: block;
+    width: 1.4em;
+    height: 1.4em;
+    margin: 0.4em auto 0;
+    fill: #fff;
+  }
+
+  /* kotak lirik: lebih lebar dari panel "Please click here", menempel di bawahnya */
+  .pleaseClick .box {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 26.8em;
+    height: 17.7em;
+    margin-top: -0.6em;
+    transform: translateX(-50%);
+    background: hsla(210, 50%, 15%, 0.75);
+    border: 1px solid rgba(160, 200, 255, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding-top: 0.6em;
+  }
+
+  /* box tidak ikut bergerak: batalkan transform dari parent dengan counter-animation */
+  .pleaseClick .box { animation: counterjump 1s ease-in-out infinite alternate; }
+  @keyframes counterjump {
+    from { transform: translateX(-50%) translateY(0); }
+    to   { transform: translateX(-50%) translateY(-0.7em); }
+  }
+
+  .pleaseClick .lyrics {
+    margin: 0;
+    font-size: 1.3em;
+    line-height: 2.2;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* garis tipis + titik di bawah lirik */
+  .slider {
+    position: absolute;
+    left: 15%;
+    right: 15%;
+    bottom: 1.6em;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .slider .knob {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #9fb3c8;
+    transform: translate(-50%, -50%);
+  }
+
+  /* huruf melompat bergelombang saat kata dinyanyikan */
+  .w { display: inline-block; white-space: pre; }
+  .w .c { display: inline-block; }
+  .w.hop .c {
+    animation: letterJump 0.45s ease-out both;
+  }
+  @keyframes letterJump {
+    0%   { transform: translateY(0); }
+    40%  { transform: translateY(-0.9em); }
+    100% { transform: translateY(0); }
+  }
+
+  .pleaseClick:focus-visible .box { border-color: #fff; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shape { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shapes" id="shapes"></div>
+
+<div class="pleaseClick" id="card" role="button" tabindex="0" aria-label="Klik untuk memutar lagu ulang tahun">
+  <p class="hint">Please click<br>here
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10h.5V8.5a1.3 1.3 0 0 1 2.6 0V10h.4V9.5a1.3 1.3 0 0 1 2.5 0V11h.3a1.2 1.2 0 0 1 2.2.7V15c0 3.6-2.4 6-5.8 6h-1.4c-2 0-3.3-.9-4.4-2.4L4.3 14.4a1.4 1.4 0 0 1 2.2-1.7L9 15z"/></svg>
+  </p>
+  <div class="box">
+    <p class="lyrics">
+      <span class="w" data-t="1.07">Hap</span><span class="w" data-t="1.34">py</span> <span class="w" data-t="1.59">Birth</span><span class="w" data-t="2.09">day</span> <span class="w" data-t="2.59">To</span> <span class="w" data-t="3.10">You</span><br>
+      <span class="w" data-t="4.12">Hap</span><span class="w" data-t="4.39">py</span> <span class="w" data-t="4.63">Birth</span><span class="w" data-t="5.14">day</span> <span class="w" data-t="5.64">To</span> <span class="w" data-t="6.15">You</span><br>
+      <span class="w" data-t="7.15">Hap</span><span class="w" data-t="7.42">py</span> <span class="w" data-t="7.66">Birth</span><span class="w" data-t="8.17">day</span> <span class="w" data-t="8.67">Dear</span> <span class="w" data-t="9.18">Fri</span><span class="w" data-t="9.69">end</span><br>
+      <span class="w" data-t="11.20">Hap</span><span class="w" data-t="11.47">py</span> <span class="w" data-t="11.71">Birth</span><span class="w" data-t="12.22">day</span> <span class="w" data-t="12.72">To</span> <span class="w" data-t="13.23">You</span>
+    </p>
+    <div class="slider" aria-hidden="true"><span class="knob" id="knob"></span></div>
+  </div>
+</div>
+
+<audio id="birthdayAudio" src="lagu-ultah.mp3"></audio>
+
+<script>
+  // ---------- Bentuk melayang ----------
+  const shapesEl = document.getElementById('shapes');
+  const colors = ['#f2a7c3', '#f2a7c3', '#8fd8c8', '#aac8f0', '#e8eefc'];
+  const COUNT = 26;
+
+  function rand(min, max) { return min + Math.random() * (max - min); }
+
+  for (let i = 0; i < COUNT; i++) {
+    const size = rand(10, 46);
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const isTriangle = Math.random() < 0.5;
+    const el = document.createElement('div');
+    el.className = 'shape';
+    el.style.left = rand(0, 98) + '%';
+    el.style.top = rand(0, 95) + '%';
+    el.style.setProperty('--dx', rand(-160, 160) + 'px');
+    el.style.setProperty('--dy', rand(-160, 160) + 'px');
+    el.style.setProperty('--rot', rand(-360, 360) + 'deg');
+    el.style.setProperty('--dur', rand(10, 26) + 's');
+    el.style.setProperty('--delay', (-rand(0, 20)) + 's');
+
+    const shape = isTriangle
+      ? '<polygon points="50,8 93,90 7,90" fill="none" stroke="' + color + '" stroke-width="5" stroke-linejoin="round"/>'
+      : '<rect x="8" y="8" width="84" height="84" fill="none" stroke="' + color + '" stroke-width="5"/>';
+
+    el.innerHTML = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 100 100">' + shape + '</svg>';
+    shapesEl.appendChild(el);
+  }
+
+  // ---------- Audio ----------
+  const card = document.getElementById('card');
+  const audio = document.getElementById('birthdayAudio');
+  const knob = document.getElementById('knob');
+
+  function playSong() {
+    audio.play().catch(function (err) {
+      console.warn('Audio tidak bisa diputar. Browser memblokir pemutaran audio.', err);
+    });
+  }
+
+  card.addEventListener('click', playSong);
+  card.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playSong(); }
+  });
+
+  // pecah tiap kata menjadi huruf supaya melompat bergelombang
+  const words = Array.prototype.slice.call(document.querySelectorAll('.w'));
+  words.forEach(function (w) {
+    const text = w.textContent;
+    w.textContent = '';
+    text.split('').forEach(function (ch, i) {
+      const c = document.createElement('span');
+      c.className = 'c';
+      c.style.setProperty('--i', i);
+      c.textContent = ch;
+      w.appendChild(c);
+    });
+  });
+
+  let lastIdx = -1;
+  let rafId = null;
+
+  function hop(el) {
+    el.classList.remove('hop');
+    void el.offsetWidth; // restart animasi
+    el.classList.add('hop');
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove('hop'); }, 900);
+  }
+
+  function tick() {
+    const t = audio.currentTime;
+    let idx = -1;
+    for (let i = 0; i < words.length; i++) {
+      if (t >= parseFloat(words[i].dataset.t)) idx = i; else break;
+    }
+    if (idx < lastIdx) lastIdx = -1;           // diulang / di-seek mundur
+    if (idx > lastIdx) { hop(words[idx]); lastIdx = idx; }
+    if (!audio.paused && !audio.ended) rafId = requestAnimationFrame(tick);
+  }
+
+  audio.addEventListener('play', function () {
+    card.classList.add('playing');
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(tick);
+  });
+  audio.addEventListener('pause', function () { cancelAnimationFrame(rafId); });
+  audio.addEventListener('ended', function () {
+    cancelAnimationFrame(rafId);
+    lastIdx = -1;
+    card.classList.remove('playing');
+  });
+</script>
+</body>
+</html>
